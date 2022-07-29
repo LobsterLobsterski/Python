@@ -1,3 +1,11 @@
+##########################################################
+# Code made by Tomasz Potoczko while learning how to use
+# python.
+# This code is an implementation of the game Tic Tac Toe
+# but it's not in OOP. This was my first attempt at doing
+# it while not knowing how to do OOP in python
+##########################################################
+
 display = [str(x) for x in range(9)]
 gameSpace = [' ' for _ in range(9)]
 checker = False
