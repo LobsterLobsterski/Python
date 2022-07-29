@@ -1,3 +1,11 @@
+##########################################################
+# Code made by Tomasz Potoczko while learning how to use
+# python.
+# This code is a python implementation of Minesweeper
+# and I feel very proud of it as it is my first OOP
+# program which i wrote by myself
+##########################################################
+
 from game import Game
 from players import HumanPlayer, ComputerPlayer
 
@@ -10,11 +18,6 @@ def play(game, player):
             break
 
         print("")
-
-# game is functional now
-# add a function which will plot the mine field
-# onto the game space AND find the fucking None
-# print
 
 
 g = Game()
