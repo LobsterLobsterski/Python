@@ -1,3 +1,10 @@
+##########################################################
+# Code made by Tomasz Potoczko while learning how to use
+# python.
+# This code is a python implementation of the binary
+# search algorythm
+##########################################################
+
 import random
 
 
