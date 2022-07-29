@@ -1,3 +1,11 @@
+##########################################################
+# Code made by Tomasz Potoczko while learning how to use
+# python.
+# This file contains the Game class which contains
+# all the methods needed for the game to function
+# properly.
+##########################################################
+
 class Game:
 
     def __init__(self):
