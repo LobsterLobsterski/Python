@@ -1,3 +1,9 @@
+##########################################################
+# Code made by Tomasz Potoczko while learning how to use
+# python.
+# This code is an implementation of Tic Tac Toe with OOP
+##########################################################
+
 from game import Game
 from players import HumanPlayer, ComputerPlayer
 
