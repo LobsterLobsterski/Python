@@ -23,13 +23,13 @@ class Calculator:
         self.create_buttons()
 
     @staticmethod
-    def calculate(prefix):
+    def calculate(postfix):
         ops = {'+': operator.add, '-': operator.sub, '*': operator.mul,
                '/': operator.truediv, '%': operator.mod, '^': operator.pow
                }
         operands = Stack()
 
-        for val in prefix:
+        for val in postfix:
             try:
                 operands.push(int(val))
 
@@ -42,7 +42,6 @@ class Calculator:
         # this limits the number of decimal points to 10
         last = int(last * (10 ** 10))
         last = last / (10 ** 10)
-        # print(f"last {last}")
 
         return last
 
