@@ -19,3 +19,6 @@ class Stack:
 
     def is_empty(self):
         return True if self.top == -1 else False
+
+    def print_all(self):
+        return f"{self.stack}"

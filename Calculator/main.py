@@ -3,13 +3,13 @@ import tkinter as tk
 
 from stack import Stack
 
-#####################################################
-# Code made by Tomasz Potoczko as one of lower
-# complexity projects. This is an implementation of
-# a simple calculator using tkinter GUI, stacks and
-# infix to postfix conversion. Feeling real proud
-# of it even though many might find it trivial.
-#####################################################
+""" Calculator with GUI
+Code made by Tomasz Potoczko as one of lower
+complexity projects. This is an implementation of
+a simple calculator using tkinter GUI, stacks and
+infix to postfix conversion. Feeling real proud
+of it even though many might find it trivial.
+"""
 
 
 class Calculator:
@@ -23,13 +23,13 @@ class Calculator:
         self.create_buttons()
 
     @staticmethod
-    def calculate(postfix):
+    def calculate(prefix):
         ops = {'+': operator.add, '-': operator.sub, '*': operator.mul,
                '/': operator.truediv, '%': operator.mod, '^': operator.pow
                }
         operands = Stack()
 
-        for val in postfix:
+        for val in prefix:
             try:
                 operands.push(int(val))
 
@@ -42,6 +42,7 @@ class Calculator:
         # this limits the number of decimal points to 10
         last = int(last * (10 ** 10))
         last = last / (10 ** 10)
+        # print(f"last {last}")
 
         return last
 
@@ -49,7 +50,10 @@ class Calculator:
     def turn_postfix(initial_array):
         postfix = []
         operators = Stack()
+        print()
         for val in initial_array:
+            # print(f'{postfix=}')
+            # print(f'{operators.print_all()=}')
             try:
                 postfix.append(str(int(val)))
             except ValueError:
@@ -57,7 +61,8 @@ class Calculator:
                 # check last three values of operators stack and if the first is ( and third is ) then we need to pop them
                 if len(operators.stack) > 2:
                     last_3 = [operators.stack[operators.top - i] for i in range(0, 3)]
-                    if last_3[0] in ["(", ")"] and last_3[2] in ["(", ")"]:
+                    # print(f'{last_3=}')
+                    if last_3[0] == ")" and last_3[2] == "(":
                         operators.pop()
                         postfix.append(operators.pop())
                         operators.pop()
@@ -83,10 +88,44 @@ class Calculator:
             else:
                 operators.pop()
 
-        # print(f"postfix: {postfix}")
+        print(f"end: {postfix=}")
         return postfix
 
+    def add_brackets(self, string_equation):
+        # print(f'{string_equation}')
+        new_string = ''
+        new_string = new_string.__add__('(')
+
+        for idx, element in enumerate(string_equation):
+            if new_string.__getitem__(len(new_string)-1) == '(' and \
+                    element in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]:
+                new_string = new_string.__add__(element)
+            elif new_string.__getitem__(len(new_string)-1) in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] and \
+                    element in ["+", "-", "*", "/", "^"]:
+                new_string = new_string.__add__(element)
+            elif new_string.__getitem__(len(new_string)-1) in ["+", "-", "*", "/", "^"] and \
+                    element in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]:
+                new_string = new_string.__add__(element)
+                new_string = new_string.__add__(')')
+            elif new_string.__getitem__(len(new_string)-1) == ')' and \
+                    element in ["+", "-", "*", "/", "^"]:
+                new_string = new_string.__add__(element)
+                new_string = new_string.__add__('(')
+            elif new_string.__getitem__(len(new_string)-1) in ["+", "-", "*", "/", "^"] and \
+                    element == '(':
+                new_string = new_string.__add__(element)
+            elif new_string.__getitem__(len(new_string)-1) in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] and \
+                    element == '(':
+                new_string = new_string.__add__('*')
+                new_string = new_string.__add__(element)
+
+        new_string = new_string.__add__(')')
+        return new_string
+
     def turn_to_array(self, string_equation):
+        print(f'{string_equation=}')
+        string_equation = self.add_brackets(string_equation)
+        print(f'{string_equation=}')
         digit_counter = 0
         array = []
         for idx, element in enumerate(string_equation):
@@ -103,7 +142,7 @@ class Calculator:
             array.append(string_equation[len(string_equation) - digit_counter:])
 
         array = list(filter(lambda item: item != '', array))
-
+        print(f'{array=}')
         postfix = self.turn_postfix(array)
 
         self.result.set('= ' + str(self.calculate(postfix)))
