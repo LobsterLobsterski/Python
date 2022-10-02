@@ -5,31 +5,21 @@ from os import listdir
 
 '''
 File containing all the loose methods required by the program.
-Moved here from main.py to make both more readable and cleaner
+Moved here from main.py to make both more readable and cleaner.
 '''
 
 
 def caveify(grid_array, cols, rows, amount):
     # makes the map less regular and more 'natural' by adding some random tiles
     counter = 0
-    # print('DEBUGG')
     while counter < amount:
         rand_y = random.randint(0, cols-1)
         rand_x = random.randint(0, rows-2)
-        # print(f'{cols=}, {rows=}')
-        # print(f'{len(grid_array[0])=}, {len(grid_array)=}')
-        # print(f'{rand_x=}, {rand_y=}')
-        # print(f'{rand_x > cols = }')
-        # print(f'{rand_y > rows = }')
-        # print(f'{rand_x > len(grid_array[0]) = }')
-        # print(f'{rand_y > len(grid_array) = }')
-        # print('\n\n')
 
         if grid_array[rand_x][rand_y] == 4:
 
             neighbours = [(rand_x-1, rand_y), (rand_x, rand_y+1), (rand_x+1, rand_y), (rand_x, rand_y-1)]
             for x, y in neighbours:
-                # print(f'\t{x=}, {y=}')
                 try:
                     val = grid_array[x][y]
                 except IndexError:
@@ -46,8 +36,13 @@ def caveify(grid_array, cols, rows, amount):
 def save_map(window):
     # responsible for saving the created map permanently
     try:
-        last = listdir("saved_maps")[len(listdir("saved_maps"))-1]
-        val = int(last[3:len(last)-4]) + 1
+        last = sorted(listdir("saved_maps"), key=len)[len(listdir("saved_maps"))-1]
+        val = ""
+        for char in last:
+            if char in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+                val = val+char
+
+        val = int(val) + 1
     except IndexError:
         val = 1
     pg.image.save(window, f"saved_maps/map{val}.jpg")
@@ -121,8 +116,8 @@ def draw_corridors(grid_array, rooms, size_mod):
         rand_start = (random.randint(room_start.x1, room_start.x2-size_mod), (random.randint(room_start.y1, room_start.y2-size_mod)))
         rand_end = (random.randint(room_end.x1, room_end.x2-size_mod), (random.randint(room_end.y1, room_end.y2-size_mod)))
 
-        # width is cols
-        # height is rows
+        # _width is cols
+        # _height is rows
         width = rand_end[0]-rand_start[0]
         height = rand_end[1]-rand_start[1]
 
@@ -163,8 +158,6 @@ def room_collision(new_room, rooms, size_mod):
 
 def place_squares(window, grid_array, square):
     # colours the grid in depending on the values in grid_array
-
-    # square = square[0]*2, square[1]*2
     for row_idx, row in enumerate(grid_array):
         for col_idx, val in enumerate(row):
             colour = False

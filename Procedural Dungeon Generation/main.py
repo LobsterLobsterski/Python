@@ -1,31 +1,31 @@
 import sys
-import time
 import tkinter as tk
 
 from functions import *
 from menu import Menu
 
 '''
-Main file where all the magic happens.
-Procedural Dungeon Map Generator created by Tomasz Potoczko.
+Procedural Dungeon Map Generator v0.3 created by Tomasz Potoczko.
 Titled as D&D Map Generator as it's what I use it for but can 
 be used for any game (hopefully).
+For now creates an inputted amount of rectangular rooms of predetermined size, 
+makes corridors between them and allows the user to _caveify the structure.
 '''
 
 
-def main(width, height, max_rooms, small_rooms=0, big_rooms=0, caveify_val=1000):
+def main(width, height, max_rooms, small_rooms=0, big_rooms=0, caveify_val=1000, grid_off=False):
     # setting the window
     pg.init()
-    size = width, height
-    size_mod = 4
-    square = 30//size_mod, 30//size_mod
-    dim = rows, cols = height//square[0]+1, width//square[1]+1
-    window = pg.display.set_mode(size)
+    SIZE = width, height
+    SIZE_MOD = 4
+    SQUARE = 30 // SIZE_MOD, 30 // SIZE_MOD
+    DIM = ROWS, COLS = height // SQUARE[0] + 1, width // SQUARE[1] + 1
+    window = pg.display.set_mode(SIZE)
     pg.display.set_caption("D&D dungeon generator")
-    print(f'{cols}x{rows}')
+    print(f'{COLS}x{ROWS}')
 
     # main loop initialisation
-    grid_array = [[3 for _ in range(cols)] for _ in range(rows)]
+    grid_array = [[3 for _ in range(COLS)] for _ in range(ROWS)]
     rooms = []
     click_counter = 0
     start = 0
@@ -45,7 +45,7 @@ def main(width, height, max_rooms, small_rooms=0, big_rooms=0, caveify_val=1000)
                 if event.key == pg.K_SPACE:
                     # reset to create a new map
                     rooms = []
-                    grid_array = [[3 for _ in range(cols)] for _ in range(rows)]
+                    grid_array = [[3 for _ in range(COLS)] for _ in range(ROWS)]
 
                     if small_rooms and big_rooms:
                         # arbitrary (for now) values
@@ -60,28 +60,28 @@ def main(width, height, max_rooms, small_rooms=0, big_rooms=0, caveify_val=1000)
                         small_room_h_max = 7
 
                         # make big rooms
-                        rooms = make_rooms(cols, rows, big_rooms, (big_room_w_min, big_room_w_max),
-                                           (big_room_h_min, big_room_h_max), rooms, size_mod)
+                        rooms = make_rooms(COLS, ROWS, big_rooms, (big_room_w_min, big_room_w_max),
+                                           (big_room_h_min, big_room_h_max), rooms, SIZE_MOD)
                         # make small rooms
-                        rooms = make_rooms(cols, rows, small_rooms, (small_room_w_min, small_room_w_max),
-                                           (small_room_h_min, small_room_h_max), rooms, size_mod)
+                        rooms = make_rooms(COLS, ROWS, small_rooms, (small_room_w_min, small_room_w_max),
+                                           (small_room_h_min, small_room_h_max), rooms, SIZE_MOD)
                     else:
-                        rooms = make_rooms(cols, rows, max_rooms, (6, 15), (6, 15), rooms, size_mod)
+                        rooms = make_rooms(COLS, ROWS, max_rooms, (6, 15), (6, 15), rooms, SIZE_MOD)
 
                     grid_array = draw_rooms(grid_array, rooms)
                     # make corridors
-                    grid_array = draw_corridors(grid_array, rooms, size_mod)
+                    grid_array = draw_corridors(grid_array, rooms, SIZE_MOD)
 
                 if event.key == pg.K_c:
-                    grid_array = caveify(grid_array, cols, rows, caveify_val)
+                    grid_array = caveify(grid_array, COLS, ROWS, caveify_val)
 
             if event.type == pg.MOUSEBUTTONDOWN:
                 # allows the user to add some hand-made corrections
 
-                square_clicked = round_to_nearest_square(pg.mouse.get_pos(), square)
+                square_clicked = round_to_nearest_square(pg.mouse.get_pos(), SQUARE, SIZE_MOD)
                 # print(f'{square_clicked=}')
 
-                # when left mouse button is clicked we add a square
+                # when left mouse button is clicked we add a SQUARE
                 if pg.mouse.get_pressed()[0]:
                     if click_counter % 2 == 0:
                         start = square_clicked
@@ -106,14 +106,15 @@ def main(width, height, max_rooms, small_rooms=0, big_rooms=0, caveify_val=1000)
                         end = None
 
                 if pg.mouse.get_pressed()[2]:
-                    # instead allow the player to delete a square (just change colour)
+                    # instead allow the player to delete a SQUARE (just change colour)
                     pass
                     # rooms.append(Rect(square_clicked[1], square_clicked[0], 2, 2))
 
         window.fill((100, 100, 100))
         grid_array = draw_rooms(grid_array, rooms)
-        place_squares(window, grid_array, square)
-        make_grid(window, size, dim, square, size_mod)
+        place_squares(window, grid_array, SQUARE)
+        if not grid_off:
+            make_grid(window, SIZE, DIM, SQUARE, SIZE_MOD)
         pg.display.update()
 
 
@@ -130,13 +131,14 @@ def menu():
 
     root.mainloop()
 
-    # print(f'{men.width, men.height, men.max_rooms, men.small_rooms, men.big_rooms, men.caveify_val =}')
-    main(men.width, men.height, men.max_rooms, men.small_rooms, men.big_rooms, men.caveify_val)
+    # print(f'{men._width, men._height, men._max_rooms, men._small_rooms, men._big_rooms, men._caveify_val =}')
+    if men.submitted:
+        w, h, m, s, b, c, g = men.return_vals()
+        main(w, h, m, s, b, c, g)
 
 
 if __name__ == '__main__':
     menu()
     # main(1280, 720, 10, 8, 4)
-    # main(300, 300, 4)
     pg.quit()
 

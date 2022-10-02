@@ -1,6 +1,5 @@
 """
-Made this separate instead of grouping it with the functions for clarity
-and maybe to add different room classes later
+File holding different room classes to creating various room shapes
 """
 
 
