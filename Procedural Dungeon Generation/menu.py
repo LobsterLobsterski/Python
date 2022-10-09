@@ -170,7 +170,7 @@ class Menu:
 
         self._advanced_settings[5] = tk.Label(self._root, text="Colour scheme:", font=30)
         self._advanced_settings[6] = tk.Radiobutton(self._root, text="Gray Tile", font=30, value=0, variable=self._colour)
-
+        self._advanced_settings[6].select()
         self._advanced_settings[7] = tk.Radiobutton(self._root, text="Dirt road", font=30, value=1, variable=self._colour)
         self._advanced_settings[8] = tk.Radiobutton(self._root, text="Forest", font=30, value=2, variable=self._colour)
         self._advanced_settings[9] = tk.Radiobutton(self._root, text="Off-white", font=30, value=3, variable=self._colour)
@@ -296,6 +296,6 @@ class Menu:
 
         self._advanced_map_size[1].select()
         self._advanced_settings[1].select()
-        self._advanced_settings[6].select()
+        
 
 
